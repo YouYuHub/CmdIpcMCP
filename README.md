@@ -1,5 +1,5 @@
 ## CmdIpcMCP
-CmdIpcMCP 目前是一个基于 Windows 命名管道的 MCP 工具。
+CmdIpcMCP 目前是一个基于 Windows 命名管道的 MCP 工具。工具文档说明在 mcp_tools.cpp 中
 
 ## 安装目前只支持 Windows
 ### VsCode
@@ -56,3 +56,5 @@ C:\Users\your—user-name\.config\opencode\opencode.jsonc
 2. 点击左侧的插件，找到 MCP 选项卡，添加：
 名称随意，启动命令填写：path\\to\\PipeIpcMCP.exe
 - 适用于交互式、长周期连续运行等命令等执行场景
+
+
