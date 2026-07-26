@@ -42,7 +42,7 @@ ToolInfo setup_pipe_info = []() -> ToolInfo {
     info.inputSchema = {
       {"type", "object"},
       {"properties", {
-      {"pipe_name", {{"type", "string"}, {"description", R"(Named pipe path, e.g. \\.\pipe\powershell_server)"}, {"default", R"(\\.\pipe\default_server)"}}},
+      {"pipe_name", {{"type", "string"}, {"description", R"(Named pipe path, please strictly follow the format of \\.\pipe\name; e.g. \\.\pipe\powershell_server)"}, {"default", R"(\\.\pipe\default_server)"}}},
       {"terminal_mode", {{"type", "string"}, {"description", "Terminal command, e.g. cmd.exe /k chcp 65001 or powershell.exe. The terminal is launched with chcp 65001 for UTF-8 support."}, {"default", "cmd.exe /k chcp 65001"}}},
       {"first_command", {{"type", "string"}, {"description", "Single command to execute, e.g. dir or ls."}, {"default", ""}}},
       {"wait_milliseconds", {{"type", "integer"}, {"description", "Maximum wait time in ms; returns early if output stabilises (unchanged for ~1s) or prompt string is found in output."}, {"default", 30000}}},
@@ -74,7 +74,7 @@ ToolInfo run_command_info = [] {
       {"type", "object"},
       {"properties", {
       {"command", {{"type", "string"}, {"description", "Single command to execute, e.g. dir or ls. PowerShell: use ; not &."}}},
-       {"pipe_name", {{"type", "string"}, {"description", R"(Named pipe path, e.g. \\.\pipe\cmd_server)"}, {"default", R"(\\.\pipe\default_server)"}}},
+       {"pipe_name", {{"type", "string"}, {"description", R"(Named pipe path, please strictly follow the format of \\.\pipe\name; e.g. \\.\pipe\cmd_server)"}, {"default", R"(\\.\pipe\default_server)"}}},
        {"wait_milliseconds", {{"type", "integer"}, {"description", "Maximum wait time in ms; returns early if output stabilises (unchanged for ~1s) or prompt string is found. Higher values allow longer-running commands to complete."}, {"default", 30000}}},
        {"prompt", {{"type", "string"}, {"description", "Optional prompt string; returns as soon as this appears in output (e.g. C:\\Users\\YouYu>). Provides faster completion detection."}, {"default", ""}}}
        }},
