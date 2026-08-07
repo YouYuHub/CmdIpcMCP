@@ -1,5 +1,18 @@
 #include "mcp_server.h"
 
+/*
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
+struct ToolInfo
+{
+    std::string name;
+    std::string description;
+    json inputSchema;
+};
+*/
+
+
 namespace mcp_tools
 {
     // ------------------------------------------------------------------
@@ -18,6 +31,9 @@ namespace mcp_tools
             "evaluated by the shell, not by these tools; output is stripped of ANSI escapes and "
             "trimmed to the last 64 KB. "
             "terminal_mode: cmd.exe gives the classic Windows prompt; powershell.exe the object-oriented shell. "
+            "IMPORTANT - Concurrency warning: sending multiple commands concurrently to the SAME pipe_name "
+            "may cause output interleaving, command interruption, or duplicated output in results. "
+            "For concurrent command execution, use different pipe_name values (e.g., \\\\.\\pipe\\worker1, \\\\.\\pipe\\worker2). "
             "Shared terminal & human-in-the-loop: the session runs in a real PTY mirrored to a visible "
             "terminal window on the user's desktop (opened automatically). That window and these tools "
             "share one stdin/stdout: commands sent via run_pipe_command and the user's keystrokes "
@@ -34,7 +50,7 @@ namespace mcp_tools
           {"terminal_mode", {{"type", "string"}, {"description", "Terminal command, e.g. cmd.exe /k chcp 65001 or powershell.exe. The terminal is launched with chcp 65001 for UTF-8 support. You cannot change the command mode of an existing terminal through this parameter. However, it seems that you can use the 'command' parameter to switch to the corresponding mode using PowerShell."}, {"default", "cmd.exe /k chcp 65001"}}},
           {"first_command", {{"type", "string"}, {"description", "Single command to execute, e.g. dir or ls."}, {"default", ""}}},
           {"wait_milliseconds", {{"type", "integer"}, {"description", "Maximum wait time in ms; returns early if output stabilises (unchanged for ~1s) or prompt string is found in output."}, {"default", 5000}}},
-          {"prompt", {{"type", "string"}, {"description", "Optional prompt string; returns as soon as this string appears in output (e.g. root@host:~#). Can be used to detect command completion."}, {"default", ""}}}
+          {"prompt", {{"type", "string"}, {"description", "Optional prompt string; supports multiple patterns separated by | (e.g., \"C:\\\\>|PS C:\\\\>|$\"); returns as soon as any pattern appears in output. Can be used to detect command completion."}, {"default", ""}}}
           }},
           {"required", json::array()}
         };
@@ -53,6 +69,9 @@ namespace mcp_tools
             "shell variables, ANSI stripping, 64 KB trim) are described in setup_pipe. "
             "If the server is not yet running on pipe_name, it is auto-started with "
             "cmd.exe /k chcp 65001 (a note is prepended to the output in that case). "
+            "IMPORTANT - Concurrency warning: sending multiple commands concurrently to the SAME pipe_name "
+            "may cause output interleaving, command interruption, or duplicated output in results. "
+            "For concurrent command execution, use different pipe_name values (e.g., \\\\.\\pipe\\worker1, \\\\.\\pipe\\worker2). "
             "Interactive hand-off: the command is typed into a PTY shared with the user's visible "
             "terminal window. If it blocks on interactive input (password, y/N, --more--, vim, ...), "
             "do NOT supply secrets yourself; the user can answer directly in that window. Wait, then "
@@ -64,7 +83,7 @@ namespace mcp_tools
           {"command", {{"type", "string"}, {"description", "Single command to execute, e.g. dir or ls. PowerShell: use ; not &"}}},
            {"pipe_name", {{"type", "string"}, {"description", R"(Named pipe path, please strictly follow the format of \\.\pipe\name; e.g. \\.\pipe\cmd_server)"}, {"default", R"(\\.\pipe\default_server)"}}},
            {"wait_milliseconds", {{"type", "integer"}, {"description", "Maximum wait time in ms; returns early if output stabilises (unchanged for ~1s) or prompt string is found. Higher values allow longer-running commands to complete."}, {"default", 5000}}},
-           {"prompt", {{"type", "string"}, {"description", "Optional prompt string; returns as soon as this appears in output (e.g. C:\\Users\\YouYu>). Provides faster completion detection."}, {"default", ""}}}
+           {"prompt", {{"type", "string"}, {"description", "Optional prompt string; supports multiple patterns separated by | (e.g., \"C:\\\\>|PS C:\\\\>|$\"); returns as soon as any pattern appears in output. Provides faster completion detection."}, {"default", ""}}}
            }},
            {"required", json::array({"command"})}
         };
@@ -123,3 +142,4 @@ namespace mcp_tools
     //  return info;
     //}();
 }
+
