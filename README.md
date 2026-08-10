@@ -38,7 +38,7 @@ C:\Users\your—user-name\.config\opencode\opencode.jsonc
       "type": "local",
       // Or ["bun", "x", "my-mcp-command"]
       "command": [
-        "C:\\path\\to\\PipeIpcMCP.exe"
+        "path\\to\\PipeIpcMCP.exe"
       ],
       "enabled": true,
       "environment": {}
@@ -60,3 +60,20 @@ C:\Users\your—user-name\.config\opencode\opencode.jsonc
 
 
 #### 其他所有支持标准 mcp 协议的编程/agent程序都可以使用
+
+
+### 测试使用
+1. 在程序目录启动服务端；打开命令行工具，输入以下命令：
+```bash
+.\PipeIpcMCP.exe --server [--pipe \\.\pipe\pipename]
+```
+- 服务端默认监听 \\\\.\\pipe\\default_server，可以 --pipe 指定其他管道名称
+
+2. 启动客户端；打开命令行工具，输入以下命令：
+```bash
+.\PipeIpcMCP.exe --client [--pipe \\.\pipe\pipename --mode pwsh|powershell|cmd|...]
+```
+- 客户端默认连接 \\\\.\\pipe\\default_server，可以 --pipe 指定其他管道名称
+- 通过 --mode 指定客户端模式，支持多种模式，如 pwsh、powershell、cmd 等
+- 客户端第一次连接会启动新窗口，含当前终端的命令行，一共会启动两个客户端窗口
+- 已知问题：初始状态（非sql/ssh连接后）执行 exit 命令会阻塞管道；后续命令无法执行；暂未修复
