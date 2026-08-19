@@ -1,5 +1,5 @@
 ## CmdIpcMCP
-CmdIpcMCP 目前是一个基于 Windows 命名管道的 MCP 工具。工具文档说明在 mcp_tools.cpp 中
+CmdIpcMCP 目前是一个基于 Windows 命名管道的 MCP 工具。工具文档说明在 mcp_tools.cpp 中；目前项目代码是闭源的，等成熟后才会开源代码
 
 ## 安装
 ### 目前只支持 Windows
